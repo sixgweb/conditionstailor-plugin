@@ -22,7 +22,7 @@ class Plugin extends PluginBase
     {
         return [
             'name'        => 'ConditionsTailor',
-            'description' => 'No description provided yet...',
+            'description' => 'Conditions Integration for Tailor',
             'author'      => 'Sixgweb',
             'icon'        => 'icon-leaf'
         ];
@@ -39,6 +39,12 @@ class Plugin extends PluginBase
         $this->removeConditionsIfNotInBlueprint();
     }
 
+    /**
+     * Register contentfield type, which only creates
+     * the conditions column in entryrecord table.
+     *
+     * @return void
+     */
     public function registerContentFields()
     {
         return [
@@ -48,7 +54,7 @@ class Plugin extends PluginBase
 
     /**
      * Events listeners to remove conditioner additions, if no conditions
-     * field in the blueprint structure.
+     * field found in the blueprint structure.
      * 
      * getBlueprintDefinition() is memoized, so fine to recall
      *
@@ -78,7 +84,6 @@ class Plugin extends PluginBase
             if ($widget->model instanceof EntryRecord) {
                 $blueprints = $widget->model->getBlueprintDefinition();
                 if (!array_key_exists('conditions', $blueprints->fields)) {
-                    //exit('here');
                     foreach ($widget->getScopes() as $scope) {
                         $config = $scope->getConfig();
                         if (isset($config['modelScope']) && $config['modelScope'] == 'meetsConditions') {
