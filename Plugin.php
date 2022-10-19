@@ -2,10 +2,10 @@
 
 namespace Sixgweb\ConditionsTailor;
 
+use App;
 use Event;
-use Backend;
 use System\Classes\PluginBase;
-use Sixgweb\ConditionsTailor\Classes\ConditionableEventHandler;
+use Sixgweb\ConditionsTailor\Classes\ConditionableEntryRecordEventHandler;
 use Tailor\Models\EntryRecord;
 
 /**
@@ -35,8 +35,12 @@ class Plugin extends PluginBase
      */
     public function boot()
     {
-        Event::subscribe(ConditionableEventHandler::class);
-        $this->removeConditionsIfNotInBlueprint();
+        Event::subscribe(ConditionableEntryRecordEventHandler::class);
+
+        //Only run in backend, even though events typically are.
+        if (App::runningInBackend()) {
+            $this->removeConditionsIfNotInBlueprint();
+        }
     }
 
     /**
@@ -64,8 +68,8 @@ class Plugin extends PluginBase
     {
         Event::listen('backend.form.extendFields', function ($widget) {
             if ($widget->model instanceof EntryRecord) {
-                $blueprints = $widget->model->getBlueprintDefinition();
-                if (!array_key_exists('conditions', $blueprints->fields)) {
+                $fields = $widget->model->getContentFieldsetDefinition();
+                if (!$fields->getfield('conditions')) {
                     $widget->removeField('conditions');
                 }
             }
@@ -73,8 +77,8 @@ class Plugin extends PluginBase
 
         Event::listen('backend.list.extendColumns', function ($widget) {
             if ($widget->model instanceof EntryRecord) {
-                $blueprints = $widget->model->getBlueprintDefinition();
-                if (!array_key_exists('conditions', $blueprints->fields)) {
+                $fields = $widget->model->getContentFieldsetDefinition();
+                if (!$fields->getfield('conditions')) {
                     $widget->removeColumn('conditions_count');
                 }
             }
@@ -82,8 +86,8 @@ class Plugin extends PluginBase
 
         Event::listen('backend.filter.extendScopes', function ($widget) {
             if ($widget->model instanceof EntryRecord) {
-                $blueprints = $widget->model->getBlueprintDefinition();
-                if (!array_key_exists('conditions', $blueprints->fields)) {
+                $fields = $widget->model->getContentFieldsetDefinition();
+                if (!$fields->getfield('conditions')) {
                     foreach ($widget->getScopes() as $scope) {
                         $config = $scope->getConfig();
                         if (isset($config['modelScope']) && $config['modelScope'] == 'meetsConditions') {
