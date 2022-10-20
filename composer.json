@@ -2,6 +2,7 @@
     "name": "sixgweb/conditionstailor-plugin",
     "type": "october-plugin",
     "description": "OctoberCMS Tailor Conditions Integration",
+    "license": "MIT",
     "require": {
         "composer/installers": "~1.0"
     }
