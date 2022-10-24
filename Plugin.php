@@ -5,7 +5,7 @@ namespace Sixgweb\ConditionsTailor;
 use App;
 use Event;
 use System\Classes\PluginBase;
-use Sixgweb\ConditionsTailor\Classes\ConditionableEntryRecordEventHandler;
+use Sixgweb\ConditionsTailor\Classes\ConditionableEventHandler;
 use Tailor\Models\EntryRecord;
 
 /**
@@ -35,7 +35,7 @@ class Plugin extends PluginBase
      */
     public function boot()
     {
-        Event::subscribe(ConditionableEntryRecordEventHandler::class);
+        Event::subscribe(ConditionableEventHandler::class);
 
         //Only run in backend, even though events typically are.
         if (App::runningInBackend()) {

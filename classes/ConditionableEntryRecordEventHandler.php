@@ -4,7 +4,7 @@ namespace Sixgweb\ConditionsTailor\Classes;
 
 use Sixgweb\Conditions\Classes\AbstractConditionableEventHandler;
 
-class ConditionableEntryRecordEventHandler extends AbstractConditionableEventHandler
+class ConditionableEventHandler extends AbstractConditionableEventHandler
 {
 
     protected function getModelClass(): string
