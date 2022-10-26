@@ -13,6 +13,10 @@ use Tailor\Models\EntryRecord;
  */
 class Plugin extends PluginBase
 {
+    public $require = [
+        'Sixgweb.Conditions',
+    ];
+
     /**
      * Returns information about this plugin.
      *
